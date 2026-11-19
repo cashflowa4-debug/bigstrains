@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Ma Boutique</title>
+
+<!-- ⚡ Preconnect : accélère le chargement Firebase en arrière-plan -->
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="https://bigstrains-813db-default-rtdb.europe-west1.firebasedatabase.app">
+
+<!-- ⚡ CSS INLINE (plus de Tailwind CDN = -400 KB sur le chemin critique) -->
+<style>
+/* ---------- RESET ---------- */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.5;background:#f9fafb;color:#111827;min-height:100vh;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font:inherit;color:inherit;background:#fff}
+a{color:inherit;text-decoration:none}
+
+/* ---------- DISPLAY / POSITION ---------- */
+.hidden{display:none!important}
+.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.block{display:block}
+.relative{position:relative}.absolute{position:absolute}.fixed{position:fixed}
+.inset-0{top:0;right:0;bottom:0;left:0}
+.top-0{top:0}.top-2{top:.5rem}.top-3{top:.75rem}.top-4{top:1rem}
+.right-0{right:0}.right-2{right:.5rem}.right-3{right:.75rem}.right-4{right:1rem}
+.bottom-0{bottom:0}.bottom-4{bottom:1rem}
+.left-2{left:.5rem}.left-3{left:.75rem}.left-4{left:1rem}.left-1\/2{left:50%}
+.z-30{z-index:30}.z-40{z-index:40}.z-50{z-index:50}.z-60{z-index:60}
+.z-90{z-index:90}.z-100{z-index:100}.z-200{z-index:200}
+.z-\[60\]{z-index:60}.z-\[90\]{z-index:90}.z-\[100\]{z-index:100}.z-\[200\]{z-index:200}
+.pointer-events-none{pointer-events:none}
+
+/* ---------- FLEX / GRID ---------- */
+.items-center{align-items:center}
+.justify-center{justify-content:center}
+.justify-between{justify-content:space-between}
+.flex-col{flex-direction:column}
+.flex-wrap{flex-wrap:wrap}
+.flex-1{flex:1 1 0%;min-width:0}
+.flex-shrink-0{flex-shrink:0}
+.gap-1{gap:.25rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}
+.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+/* ---------- SIZING ---------- */
+.w-full{width:100%}
+.w-3\.5{width:.875rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-6{width:1.5rem}
+.w-7{width:1.75rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-10{width:2.5rem}
+.w-14{width:3.5rem}.w-16{width:4rem}.w-20{width:5rem}.w-24{width:6rem}
+.w-max{width:max-content}
+.h-3\.5{height:.875rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-6{height:1.5rem}
+.h-7{height:1.75rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-10{height:2.5rem}
+.h-14{height:3.5rem}.h-16{height:4rem}.h-20{height:5rem}.h-24{height:6rem}
+.h-full{height:100%}
+.max-w-sm{max-width:24rem}
+.max-w-md{max-width:28rem}
+.max-w-2xl{max-width:42rem}
+.max-w-3xl{max-width:48rem}
+.max-w-\[90vw\]{max-width:90vw}
+.max-h-\[90vh\]{max-height:90vh}
+.min-w-0{min-width:0}
+
+/* ---------- OVERFLOW ---------- */
+.overflow-hidden{overflow:hidden}
+.overflow-y-auto{overflow-y:auto}
+.overflow-x-auto{overflow-x:auto}
+
+/* ---------- BORDER / RADIUS ---------- */
+.rounded-full{border-radius:9999px}
+.rounded-lg{border-radius:.5rem}
+.rounded-xl{border-radius:.75rem}
+.rounded-2xl{border-radius:1rem}
+.rounded-t-2xl{border-top-left-radius:1rem;border-top-right-radius:1rem}
+.border{border:1px solid #e5e7eb}
+.border-t{border-top:1px solid #e5e7eb}
+.border-b{border-bottom:1px solid #e5e7eb}
+
+/* ---------- BACKGROUND ---------- */
+.bg-white{background:#fff}
+.bg-gray-50{background:#f9fafb}
+.bg-gray-100{background:#f3f4f6}
+.bg-gray-200{background:#e5e7eb}
+.bg-gray-900{background:#111827}
+.bg-black\/40{background:rgba(0,0,0,.4)}
+.bg-black\/50{background:rgba(0,0,0,.5)}
+.bg-black\/60{background:rgba(0,0,0,.6)}
+.bg-white\/90{background:rgba(255,255,255,.9)}
+.bg-amber-50{background:#fffbeb}
+.bg-emerald-50{background:#ecfdf5}
+.bg-emerald-500{background:#10b981}
+.bg-red-500{background:#ef4444}
+.bg-blue-500{background:#3b82f6}
+.bg-\[\#25D366\]{background:#25D366}
+.bg-\[\#229ED9\]{background:#229ED9}
+.bg-\[\#3A76F0\]{background:#3A76F0}
+.bg-\[\#FFFC00\]{background:#FFFC00}
+
+/* ---------- TEXT COLOR ---------- */
+.text-white{color:#fff}
+.text-gray-400{color:#9ca3af}
+.text-gray-500{color:#6b7280}
+.text-gray-600{color:#4b5563}
+.text-gray-700{color:#374151}
+.text-gray-900{color:#111827}
+.text-amber-800{color:#92400e}
+.text-emerald-800{color:#065f46}
+.text-red-500{color:#ef4444}
+.text-red-600{color:#dc2626}
+.text-green-600{color:#16a34a}
+
+/* ---------- BORDER COLOR ---------- */
+.border-gray-100{border-color:#f3f4f6}
+.border-gray-200{border-color:#e5e7eb}
+.border-amber-200{border-color:#fde68a}
+.border-emerald-200{border-color:#a7f3d0}
+.border-red-500{border-color:#ef4444}
+.border-gray-900{border-color:#111827}
+
+/* ---------- TYPOGRAPHY ---------- */
+.text-\[10px\]{font-size:10px}
+.text-\[11px\]{font-size:11px}
+.text-xs{font-size:.75rem;line-height:1rem}
+.text-sm{font-size:.875rem;line-height:1.25rem}
+.text-lg{font-size:1.125rem;line-height:1.75rem}
+.text-xl{font-size:1.25rem;line-height:1.75rem}
+.text-2xl{font-size:1.5rem;line-height:2rem}
+.font-medium{font-weight:500}
+.font-semibold{font-weight:600}
+.text-center{text-align:center}
+.text-left{text-align:left}
+.uppercase{text-transform:uppercase}
+.tracking-tight{letter-spacing:-.025em}
+.tracking-wide{letter-spacing:.025em}
+.leading-relaxed{line-height:1.625}
+.whitespace-nowrap{white-space:nowrap}
+.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.accent-gray-900{accent-color:#111827}
+
+/* ---------- SPACING ---------- */
+.p-1{padding:.25rem}
+.p-1\.5{padding:.375rem}
+.p-2{padding:.5rem}
+.p-3{padding:.75rem}
+.p-4{padding:1rem}
+.p-6{padding:1.5rem}
+.px-2{padding-left:.5rem;padding-right:.5rem}
+.px-3{padding-left:.75rem;padding-right:.75rem}
+.px-4{padding-left:1rem;padding-right:1rem}
+.px-5{padding-left:1.25rem;padding-right:1.25rem}
+.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}
+.py-1{padding-top:.25rem;padding-bottom:.25rem}
+.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}
+.py-2{padding-top:.5rem;padding-bottom:.5rem}
+.py-3{padding-top:.75rem;padding-bottom:.75rem}
+.py-4{padding-top:1rem;padding-bottom:1rem}
+.py-6{padding-top:1.5rem;padding-bottom:1.5rem}
+.py-12{padding-top:3rem;padding-bottom:3rem}
+.pt-1{padding-top:.25rem}
+.pt-2{padding-top:.5rem}
+.pt-3{padding-top:.75rem}
+.pt-4{padding-top:1rem}
+.pt-6{padding-top:1.5rem}
+.pb-1{padding-bottom:.25rem}
+.pb-2{padding-bottom:.5rem}
+.pb-24{padding-bottom:6rem}
+.pb-32{padding-bottom:8rem}
+.mb-1{margin-bottom:.25rem}
+.mb-2{margin-bottom:.5rem}
+.mb-3{margin-bottom:.75rem}
+.mb-4{margin-bottom:1rem}
+.mb-6{margin-bottom:1.5rem}
+.mt-1{margin-top:.25rem}
+.mt-2{margin-top:.5rem}
+.mt-3{margin-top:.75rem}
+.mt-4{margin-top:1rem}
+.mt-6{margin-top:1.5rem}
+.mx-auto{margin-left:auto;margin-right:auto}
+.space-y-2>*+*{margin-top:.5rem}
+.space-y-3>*+*{margin-top:.75rem}
+.space-y-4>*+*{margin-top:1rem}
+
+/* ---------- MISC ---------- */
+.object-cover{object-fit:cover}
+.aspect-square{aspect-ratio:1/1}
+.cursor-pointer{cursor:pointer}
+.select-none{user-select:none}
+.shadow{box-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1)}
+.shadow-lg{box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1)}
+.shadow-2xl{box-shadow:0 25px 50px -12px rgba(0,0,0,.25)}
+.ring-2.ring-white{box-shadow:0 0 0 2px #fff}
+.transition{transition:all .15s cubic-bezier(.4,0,.2,1)}
+.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}
+.duration-300{transition-duration:.3s}
+.transform{will-change:transform}
+.translate-x-full{transform:translateX(100%)}
+.translate-x-0{transform:translateX(0)}
+.-translate-x-1\/2{transform:translateX(-50%)}
+.backdrop-blur{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+
+/* ---------- INTERACTION ---------- */
+.focus\:outline-none:focus{outline:none}
+.focus\:ring-2:focus{box-shadow:0 0 0 2px #111827}
+.hover\:bg-gray-100:hover{background:#f3f4f6}
+.hover\:bg-red-50:hover{background:#fef2f2}
+.hover\:text-red-500:hover{color:#ef4444}
+.hover\:text-gray-700:hover{color:#374151}
+.hover\:bg-\[\#1ebe5a\]:hover{background:#1ebe5a}
+.hover\:bg-\[\#1d8cbf\]:hover{background:#1d8cbf}
+.hover\:bg-\[\#2f66d4\]:hover{background:#2f66d4}
+.hover\:bg-\[\#e6e300\]:hover{background:#e6e300}
+.active\:scale-95:active{transform:scale(.95)}
+.active\:scale-\[0\.99\]:active{transform:scale(.99)}
+
+/* ---------- RESPONSIVE ---------- */
+@media(min-width:640px){
+  .sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* ---------- ANIMATION ---------- */
+.fade-in{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ---------- CUSTOM ---------- */
+.no-scrollbar::-webkit-scrollbar{display:none}
+.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+input[type="search"]::-webkit-search-cancel-button{-webkit-appearance:none}
+</style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 antialiased min-h-screen">
+
+<!-- ============================================================ -->
+<!-- 1. VITRINE PUBLIQUE                                          -->
+<!-- ============================================================ -->
+<section id="storefront">
+  <header class="max-w-2xl mx-auto px-4 pt-6 pb-2">
+    <div id="announcement" class="mb-4 text-center text-xs bg-amber-50 text-amber-800 rounded-full py-2 px-4 border border-amber-200 hidden"></div>
+    <div id="promoBanner" class="mb-4 text-center text-xs bg-emerald-50 text-emerald-800 rounded-full py-2 px-4 border border-emerald-200 hidden"></div>
+
+    <div class="flex flex-col items-center text-center">
+      <div class="relative">
+        <img id="shopLogo" alt="Logo boutique"
+          class="w-24 h-24 rounded-full object-cover bg-gray-200 ring-2 ring-white shadow-lg cursor-pointer select-none">
+        <div class="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-1 shadow pointer-events-none">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center gap-2">
+        <h1 id="shopName" class="text-2xl font-semibold tracking-tight"></h1>
+        <button id="shareBtn" class="p-1.5 text-gray-400 hover:text-gray-700 rounded-full" title="Partager la boutique" aria-label="Partager">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+        </button>
+      </div>
+      <p id="shopBio" class="mt-2 text-sm text-gray-600 max-w-md leading-relaxed"></p>
+    </div>
+
+    <div id="trustBlock" class="mt-4 flex flex-wrap gap-2 justify-center"></div>
+
+    <div class="mt-6">
+      <input id="searchInput" type="search" placeholder="Rechercher un produit..."
+        class="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-900 text-sm">
+    </div>
+
+    <div class="mt-3 flex items-center gap-2">
+      <select id="sortSelect" class="text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white flex-shrink-0">
+        <option value="relevance">Pertinence</option>
+        <option value="price-asc">Prix croissant</option>
+        <option value="price-desc">Prix décroissant</option>
+        <option value="newest">Nouveautés</option>
+      </select>
+      <button id="favFilterBtn" class="text-xs px-3 py-2 rounded-lg border border-gray-200 bg-white flex items-center gap-1 flex-shrink-0">
+        <span>♥</span> <span>Favoris</span>
+      </button>
+    </div>
+
+    <div id="categories" class="mt-3 flex gap-2 overflow-x-auto pb-1 no-scrollbar justify-center"></div>
+  </header>
+
+  <section id="recentSection" class="hidden max-w-2xl mx-auto px-4 pt-2">
+    <h3 class="text-[11px] uppercase text-gray-400 font-medium mb-2 tracking-wide">Récemment consultés</h3>
+    <div id="recentStrip" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar"></div>
+  </section>
+
+  <main class="max-w-2xl mx-auto px-4 pt-4 pb-32">
+    <div id="productGrid" class="grid gap-4 sm:grid-cols-2"></div>
+    <div id="emptyState" class="hidden text-center text-gray-500 text-sm py-12"></div>
+  </main>
+
+  <button id="cartButton"
+    class="fixed bottom-4 left-4 right-4 max-w-2xl mx-auto hidden bg-gray-900 text-white rounded-2xl py-4 px-5 shadow-2xl flex items-center justify-between z-30 active:scale-[0.99] transition">
+    <span class="flex items-center gap-2 text-sm font-medium">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.4 4.8A1 1 0 005.5 19H17M7 13h10M17 19a2 2 0 11-4 0 2 2 0 014 0zm-8 0a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      <span><span id="cartCount">0</span> article(s)</span>
+    </span>
+    <span id="cartTotalSmall" class="text-sm font-semibold"></span>
+  </button>
+</section>
+
+<!-- ============================================================ -->
+<!-- 2. TIROIR PANIER                                             -->
+<!-- ============================================================ -->
+<div id="cartOverlay" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
+<aside id="cartDrawer"
+  class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 flex flex-col shadow-2xl translate-x-full transition-transform duration-300">
+  <div class="flex items-center justify-between p-4 border-b">
+    <h2 class="font-semibold text-lg">Mon panier</h2>
+    <button id="closeCartBtn" class="p-2 rounded-full hover:bg-gray-100" aria-label="Fermer">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+  <div class="border-t p-4 bg-white">
+    <div id="cartPromo" class="hidden mb-3 text-xs bg-emerald-50 text-emerald-800 rounded-lg py-2 px-3"></div>
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-sm text-gray-600">Total à payer</span>
+      <span id="cartTotal" class="font-semibold text-xl"></span>
+    </div>
+    <div id="orderButtons" class="grid gap-2"></div>
+  </div>
+</aside>
+
+<!-- ============================================================ -->
+<!-- 3. MODAL PRODUIT                                             -->
+<!-- ============================================================ -->
+<div id="productModal" class="fixed inset-0 bg-black/50 z-[60] hidden items-center justify-center p-4">
+  <div class="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto fade-in">
+    <div class="relative">
+      <img id="pmImage" class="w-full aspect-square object-cover rounded-t-2xl bg-gray-100" alt="">
+      <button id="pmFav" class="absolute top-3 right-3 w-10 h-10 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-lg shadow text-gray-400">♡</button>
+      <button id="pmClose" class="absolute top-3 left-3 w-10 h-10 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow" aria-label="Fermer">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="p-4">
+      <span id="pmCategory" class="text-[11px] uppercase tracking-wide text-gray-400 font-medium"></span>
+      <h3 id="pmName" class="text-lg font-semibold mt-1"></h3>
+      <p id="pmDesc" class="text-sm text-gray-600 mt-2 leading-relaxed"></p>
+      <div class="mt-4 flex items-center justify-between">
+        <span id="pmPrice" class="text-xl font-semibold"></span>
+      </div>
+      <div class="mt-4 flex items-center gap-3">
+        <div class="flex items-center gap-1 bg-gray-100 rounded-lg">
+          <button id="pmMinus" class="w-9 h-9 text-gray-700 font-semibold">−</button>
+          <span id="pmQty" class="w-6 text-center text-sm font-medium">1</span>
+          <button id="pmPlus" class="w-9 h-9 text-gray-700 font-semibold">+</button>
+        </div>
+        <button id="pmAdd" class="flex-1 bg-gray-900 text-white py-3 rounded-lg text-sm font-medium">Ajouter au panier</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 4. TOAST                                                     -->
+<!-- ============================================================ -->
+<div id="toast"
+  class="fixed top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm py-3 px-5 rounded-xl shadow-lg z-[200] hidden max-w-[90vw] text-center"></div>
+
+<!-- ============================================================ -->
+<!-- 5. MODAL CONNEXION ADMIN                                     -->
+<!-- ============================================================ -->
+<div id="adminLoginModal" class="fixed inset-0 bg-black/60 z-[100] hidden items-center justify-center p-4">
+  <div class="bg-white rounded-2xl p-6 max-w-sm w-full fade-in">
+    <h2 class="text-lg font-semibold mb-1">Accès administrateur</h2>
+    <p id="loginStepLabel" class="text-xs text-gray-500 mb-3 hidden"></p>
+    <input id="adminPassword" type="password" placeholder="Mot de passe"
+      class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-900 text-sm mb-2">
+    <div id="loginError" class="text-red-500 text-xs mb-2 h-4"></div>
+    <div class="flex gap-2 mt-2">
+      <button id="adminLoginCancelBtn" class="flex-1 py-3 rounded-xl bg-gray-100 text-gray-700 text-sm font-medium">Annuler</button>
+      <button id="adminLoginBtn" class="flex-1 py-3 rounded-xl bg-gray-900 text-white text-sm font-medium">Valider</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 6. PANNEAU ADMINISTRATION                                    -->
+<!-- ============================================================ -->
+<div id="adminPanel" class="fixed inset-0 bg-gray-50 z-[90] hidden overflow-y-auto">
+  <div class="max-w-3xl mx-auto p-4 pb-24">
+    <header class="flex items-center justify-between mb-6 pt-2">
+      <h1 class="text-lg font-semibold">Administration</h1>
+      <button id="adminQuitBtn" class="px-4 py-2 rounded-lg bg-gray-200 text-sm font-medium">Quitter</button>
+    </header>
+    <nav id="adminTabs" class="flex gap-2 overflow-x-auto mb-6 no-scrollbar">
+      <button data-tab="products" class="admin-tab px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">Produits</button>
+      <button data-tab="profile" class="admin-tab px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">Profil</button>
+      <button data-tab="contacts" class="admin-tab px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">Contacts</button>
+      <button data-tab="security" class="admin-tab px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap">Sécurité</button>
+    </nav>
+    <div id="adminContent"></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 7. JAVASCRIPT                                                -->
+<!-- ============================================================ -->
+<script>
+'use strict';
+
+/* =============================================================
+   UTILITAIRES
+============================================================= */
+function $(id) { return document.getElementById(id); }
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function sha256(str) {
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function compressImage(file, maxSize = 800, quality = 0.75) {
+  return new Promise((resolve, reject) => {
+    if (!file.type.startsWith('image/')) { reject(new Error('Fichier non image')); return; }
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Lecture fichier échouée'));
+    reader.onload = e => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Image invalide'));
+      img.onload = () => {
+        try {
+          let { width, height } = img;
+          if (width > maxSize || height > maxSize) {
+            const ratio = Math.min(maxSize / width, maxSize / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        } catch (err) { reject(err); }
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function placeholderImg(name) {
+  const colors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ef4444', '#14b8a6'];
+  const char = (name || '?').charAt(0).toUpperCase();
+  const color = colors[(name || '?').charCodeAt(0) % colors.length];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${color}"/><stop offset="1" stop-color="${color}aa"/></linearGradient></defs><rect width="400" height="400" fill="url(#g)"/><text x="200" y="245" text-anchor="middle" font-family="sans-serif" font-size="150" fill="white" font-weight="600">${char}</text></svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+
+function formatPrice(n) {
+  const currency = (state && state.profile && state.profile.currency) || 'FCFA';
+  const num = Number(n) || 0;
+  const formatted = new Intl.NumberFormat('fr-FR').format(num);
+  return `${formatted} ${currency}`;
+}
+
+function mergeDeep(target, source) {
+  const out = Array.isArray(target) ? [...target] : { ...target };
+  for (const k in source) {
+    if (source[k] && typeof source[k] === 'object' && !Array.isArray(source[k])
+        && target[k] && typeof target[k] === 'object' && !Array.isArray(target[k])) {
+      out[k] = mergeDeep(target[k], source[k]);
+    } else {
+      out[k] = source[k];
+    }
+  }
+  return out;
+}
+
+let toastTimer;
+function toast(msg) {
+  const el = $('toast');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.add('hidden'), 2600);
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (e) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (_) {}
+    document.body.removeChild(ta);
+    return ok;
+  }
+}
+
+function uid() {
+  return 'id_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+}
+
+const SEVEN_DAYS = 7 * 24 * 3600 * 1000;
+function isNewProduct(p) {
+  return p && p.createdAt && (Date.now() - p.createdAt < SEVEN_DAYS);
+}
+
+/* Charge un script à la demande (sans bloquer le rendu) */
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('Échec chargement ' + src));
+    document.head.appendChild(s);
+  });
+}
+
+/* =============================================================
+   CONSTANTES & ÉTAT
+============================================================= */
+const STORAGE_KEY  = 'minishop_data';
+const FB_URL_KEY   = 'minishop_fb_url';
+const FB_CACHE_KEY = 'minishop_fb_cache';
+const CART_KEY     = 'minishop_cart';
+const FAV_KEY      = 'minishop_favs';
+const RECENT_KEY   = 'minishop_recent';
+const LOCK_KEY     = 'minishop_lock';
+
+// ⚡ URL Firebase gravée en dur → lien court pour les visiteurs
+const HARDCODED_FB_URL = 'https://bigstrains-813db-default-rtdb.europe-west1.firebasedatabase.app/';
+
+const now = Date.now();
+const DEFAULT_DATA = {
+  profile: {
+    name: 'Studio Élégance',
+    bio: 'Boutique de créations artisanales. Chaque pièce est unique, faite à la main avec soin. Livraison rapide dans toute la ville.',
+    announcement: '🚚 Livraison offerte dès 25 000 FCFA d\'achat',
+    logo: '',
+    currency: 'FCFA',
+    trust: [
+      { icon: '⚡', text: 'Réponse rapide' },
+      { icon: '🔒', text: 'Paiement à la livraison' },
+      { icon: '📦', text: 'Livraison soignée' }
+    ],
+    promo: { text: '', code: '' }
+  },
+  products: [
+    { id: 'p1', name: 'Sac en cuir naturel', category: 'Accessoires', price: 15000, description: 'Sac à main en cuir véritable, finitions main, bandoulière ajustable.', image: '', active: true, createdAt: now - 90 * 24 * 3600 * 1000 },
+    { id: 'p2', name: 'Bracelet perlé doré', category: 'Bijoux', price: 8000, description: 'Bracelet artisanal en perles dorées et pierres naturelles.', image: '', active: true, createdAt: now - 60 * 24 * 3600 * 1000 },
+    { id: 'p3', name: 'Bougie parfumée', category: 'Maison', price: 5000, description: 'Bougie de soja parfumée vanille et bois de santal, 40h de combustion.', image: '', active: true, createdAt: now - 30 * 24 * 3600 * 1000 },
+    { id: 'p4', name: 'Carnet relié cuir', category: 'Papeterie', price: 12000, description: 'Carnet de notes A5 avec couverture en cuir, 100 pages.', image: '', active: false, createdAt: now - 15 * 24 * 3600 * 1000 }
+  ],
+  contacts: {
+    whatsapp: { enabled: true,  value: '' },
+    telegram: { enabled: false, value: '' },
+    signal:   { enabled: false, value: '' },
+    snapchat: { enabled: false, value: '' }
+  },
+  security: {
+    passwordHash: '',
+    pinEnabled: false,
+    pinHash: ''
+  }
+};
+
+let state = null;
+let fbDb = null;
+let currentTab = 'products';
+let editingProductId = null;
+let pendingProductImage = null;
+let pendingLogoImage = null;
+let activeCategory = '__all__';
+let searchQuery = '';
+let sortMode = 'relevance';
+let showFavoritesOnly = false;
+let logoClickTimes = [];
+let loginStep = 'password';
+let lastRenderHash = '';
+
+// Panier / favoris / récents (par visiteur)
+let cart = {};
+try { cart = JSON.parse(localStorage.getItem(CART_KEY) || '{}') || {}; } catch (_) { cart = {}; }
+function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (_) {} }
+
+let favorites = [];
+try { favorites = JSON.parse(localStorage.getItem(FAV_KEY) || '[]') || []; } catch (_) { favorites = []; }
+function saveFavorites() { try { localStorage.setItem(FAV_KEY, JSON.stringify(favorites)); } catch (_) {} }
+
+let recentlyViewed = [];
+try { recentlyViewed = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]') || []; } catch (_) { recentlyViewed = []; }
+function saveRecentlyViewed() { try { localStorage.setItem(RECENT_KEY, JSON.stringify(recentlyViewed)); } catch (_) {} }
+
+let lock = { attempts: 0, until: 0 };
+try { lock = JSON.parse(localStorage.getItem(LOCK_KEY) || '{}') || lock; } catch (_) { lock = { attempts: 0, until: 0 }; }
+function saveLock() { try { localStorage.setItem(LOCK_KEY, JSON.stringify(lock)); } catch (_) {} }
+
+/* =============================================================
+   CACHE & PERSISTANCE
+============================================================= */
+function loadLocalData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return mergeDeep(DEFAULT_DATA, JSON.parse(raw));
+  } catch (_) {}
+  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+}
+
+function loadFirebaseCache() {
+  try {
+    const raw = localStorage.getItem(FB_CACHE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (_) {}
+  return null;
+}
+
+function saveFirebaseCache(data) {
+  try { localStorage.setItem(FB_CACHE_KEY, JSON.stringify(data)); } catch (_) {}
+}
+
+function saveData() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {}
+  saveFirebaseCache(state);
+  if (fbDb) {
+    fbDb.ref('store').set(state).catch(e => console.error('[Firebase] write error', e));
+  }
+}
+
+/* =============================================================
+   FIREBASE (chargement asynchrone)
+============================================================= */
+function getFirebaseUrl() {
+  const hashMatch = location.hash.match(/[#&]fb=([^&]+)/);
+  if (hashMatch) return decodeURIComponent(hashMatch[1]);
+  return localStorage.getItem(FB_URL_KEY) || HARDCODED_FB_URL;
+}
+
+async function connectFirebase(url) {
+  if (!url || typeof firebase === 'undefined') return false;
+  try {
+    if (firebase.apps.length) {
+      await Promise.all(firebase.apps.map(a => a.delete().catch(() => {})));
+    }
+    firebase.initializeApp({ databaseURL: url });
+    fbDb = firebase.database();
+
+    const snap = await fbDb.ref('store').once('value');
+    if (!snap.exists()) {
+      await fbDb.ref('store').set(state);
+    } else {
+      state = mergeDeep(DEFAULT_DATA, snap.val());
+      saveFirebaseCache(snap.val());
+      render(true);
+    }
+
+    fbDb.ref('store').on('value', s => {
+      const data = s.val();
+      if (data) {
+        state = mergeDeep(DEFAULT_DATA, data);
+        saveFirebaseCache(data);
+        render(true);
+      }
+    });
+
+    return true;
+  } catch (e) {
+    console.error('[Firebase] init error', e);
+    fbDb = null;
+    return false;
+  }
+}
+
+async function loadFirebaseAsync() {
+  try {
+    await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
+    await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js');
+    await connectFirebase(getFirebaseUrl());
+  } catch (e) {
+    console.warn('[Firebase] indisponible:', e);
+  }
+}
+
+/* =============================================================
+   RENDU HEADER / TRUST / PROMO
+============================================================= */
+function renderHeader() {
+  const p = state.profile;
+  $('shopName').textContent = p.name || 'Ma Boutique';
+  $('shopBio').textContent = p.bio || '';
+
+  const ann = $('announcement');
+  if (p.announcement && p.announcement.trim()) {
+    ann.textContent = p.announcement;
+    ann.classList.remove('hidden');
+  } else {
+    ann.classList.add('hidden');
+  }
+
+  const promo = p.promo || {};
+  const promoEl = $('promoBanner');
+  if ((promo.text && promo.text.trim()) || (promo.code && promo.code.trim())) {
+    let html = '';
+    if (promo.text && promo.text.trim()) html += escapeHtml(promo.text);
+    if (promo.code && promo.code.trim()) html += ` · Code : <strong>${escapeHtml(promo.code)}</strong>`;
+    promoEl.innerHTML = html;
+    promoEl.classList.remove('hidden');
+  } else {
+    promoEl.classList.add('hidden');
+  }
+
+  $('shopLogo').src = p.logo || placeholderImg(p.name || 'M');
+}
+
+function renderTrust() {
+  const el = $('trustBlock');
+  const items = (state.profile.trust || []).filter(t => t && t.text && t.text.trim());
+  if (items.length === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = items.map(t => `
+    <span class="inline-flex items-center gap-1 text-[11px] bg-white border border-gray-200 rounded-full px-3 py-1 text-gray-600">
+      <span>${escapeHtml(t.icon || '•')}</span> ${escapeHtml(t.text)}
+    </span>
+  `).join('');
+}
+
+/* =============================================================
+   PRODUITS / FILTRES
+============================================================= */
+function getFilteredProducts() {
+  let list = state.products.filter(p => p.active);
+  if (activeCategory !== '__all__') list = list.filter(p => p.category === activeCategory);
+  if (showFavoritesOnly) list = list.filter(p => favorites.includes(p.id));
+
+  if (searchQuery.trim()) {
+    const q = searchQuery.toLowerCase().trim();
+    list = list.filter(p =>
+      (p.name || '').toLowerCase().includes(q) ||
+      (p.description || '').toLowerCase().includes(q) ||
+      (p.category || '').toLowerCase().includes(q)
+    );
+  }
+
+  if (sortMode === 'price-asc') list.sort((a, b) => (a.price || 0) - (b.price || 0));
+  else if (sortMode === 'price-desc') list.sort((a, b) => (b.price || 0) - (a.price || 0));
+  else if (sortMode === 'newest') list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  return list;
+}
+
+function renderCategories() {
+  const cats = [...new Set(state.products.filter(p => p.active).map(p => p.category).filter(Boolean))];
+  const container = $('categories');
+  if (cats.length === 0) { container.innerHTML = ''; return; }
+
+  const btn = (val, label) => {
+    const active = activeCategory === val;
+    return `<button data-cat="${escapeHtml(val)}" class="cat-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border transition ${active ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-700 border-gray-200'}">${escapeHtml(label)}</button>`;
+  };
+
+  container.innerHTML = btn('__all__', 'Tout') + cats.map(c => btn(c, c)).join('');
+
+  container.querySelectorAll('.cat-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      activeCategory = b.dataset.cat;
+      renderCategories();
+      renderProducts();
+    });
+  });
+}
+
+function productCardHtml(p) {
+  const qty = cart[p.id] || 0;
+  const img = p.image || placeholderImg(p.name);
+  const fav = favorites.includes(p.id);
+  const nouveau = isNewProduct(p);
+
+  return `
+    <article class="fade-in bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col">
+      <div class="relative aspect-square bg-gray-100 cursor-pointer" data-view="${p.id}">
+        <img src="${img}" alt="${escapeHtml(p.name)}" class="w-full h-full object-cover" loading="lazy">
+        ${nouveau ? '<span class="absolute top-2 left-2 text-[10px] font-semibold bg-emerald-500 text-white px-2 py-0.5 rounded-full">Nouveau</span>' : ''}
+        <button data-fav="${p.id}" class="absolute top-2 right-2 w-9 h-9 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow" title="Favori" aria-label="Favori">
+          <span class="text-lg ${fav ? 'text-red-500' : 'text-gray-400'}">${fav ? '♥' : '♡'}</span>
+        </button>
+      </div>
+      <div class="p-4 flex flex-col flex-1">
+        <span class="text-[11px] uppercase tracking-wide text-gray-400 font-medium">${escapeHtml(p.category || '')}</span>
+        <h3 class="font-semibold text-sm mt-1 cursor-pointer" data-view="${p.id}">${escapeHtml(p.name)}</h3>
+        <p class="text-xs text-gray-500 mt-1 line-clamp-2 flex-1">${escapeHtml(p.description || '')}</p>
+        <div class="mt-3 flex items-center justify-between gap-2">
+          <span class="font-semibold text-sm">${formatPrice(p.price)}</span>
+          ${qty === 0
+            ? `<button data-add="${p.id}" class="bg-gray-900 text-white text-xs font-medium px-3 py-2 rounded-lg active:scale-95 transition">Ajouter</button>`
+            : `<div class="flex items-center gap-1 bg-gray-100 rounded-lg">
+                 <button data-minus="${p.id}" class="w-8 h-8 text-gray-700 font-semibold">−</button>
+                 <span class="w-6 text-center text-sm font-medium">${qty}</span>
+                 <button data-plus="${p.id}" class="w-8 h-8 text-gray-700 font-semibold">+</button>
+               </div>`
+          }
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderProducts() {
+  const list = getFilteredProducts();
+  const grid = $('productGrid');
+  const empty = $('emptyState');
+
+  if (list.length === 0) {
+    grid.innerHTML = '';
+    let msg = 'Aucun produit ne correspond à votre recherche.';
+    if (showFavoritesOnly) msg = 'Aucun favori pour l\'instant. Ajoutez des ♥ sur vos produits préférés.';
+    empty.textContent = msg;
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  grid.innerHTML = list.map(productCardHtml).join('');
+
+  grid.querySelectorAll('[data-view]').forEach(el =>
+    el.addEventListener('click', () => openProductModal(el.dataset.view)));
+  grid.querySelectorAll('[data-fav]').forEach(b =>
+    b.addEventListener('click', e => { e.stopPropagation(); toggleFavorite(b.dataset.fav); }));
+  grid.querySelectorAll('[data-add]').forEach(b =>
+    b.addEventListener('click', e => { e.stopPropagation(); addToCart(b.dataset.add, 1); }));
+  grid.querySelectorAll('[data-plus]').forEach(b =>
+    b.addEventListener('click', e => { e.stopPropagation(); addToCart(b.dataset.plus, 1); }));
+  grid.querySelectorAll('[data-minus]').forEach(b =>
+    b.addEventListener('click', e => { e.stopPropagation(); addToCart(b.dataset.minus, -1); }));
+}
+
+/* =============================================================
+   RÉCEMMENT CONSULTÉS
+============================================================= */
+function recordViewed(id) {
+  if (!id) return;
+  recentlyViewed = [id, ...recentlyViewed.filter(x => x !== id)].slice(0, 12);
+  saveRecentlyViewed();
+  renderRecentlyViewed();
+}
+
+function renderRecentlyViewed() {
+  const section = $('recentSection');
+  const strip = $('recentStrip');
+  const valid = recentlyViewed
+    .map(id => state.products.find(p => p.id === id))
+    .filter(p => p && p.active)
+    .slice(0, 8);
+
+  if (valid.length === 0) { section.classList.add('hidden'); return; }
+  section.classList.remove('hidden');
+  strip.innerHTML = valid.map(p => {
+    const img = p.image || placeholderImg(p.name);
+    return `
+      <button data-recent="${p.id}" class="flex-shrink-0 w-24 text-left">
+        <img src="${img}" class="w-24 h-24 rounded-lg object-cover bg-gray-100" alt="" loading="lazy">
+        <div class="text-[11px] mt-1 line-clamp-2 text-gray-700">${escapeHtml(p.name)}</div>
+        <div class="text-[11px] text-gray-500">${formatPrice(p.price)}</div>
+      </button>
+    `;
+  }).join('');
+  strip.querySelectorAll('[data-recent]').forEach(b =>
+    b.addEventListener('click', () => openProductModal(b.dataset.recent)));
+}
+
+/* =============================================================
+   PANIER
+============================================================= */
+function addToCart(id, delta) {
+  const p = state.products.find(x => x.id === id);
+  if (!p || !p.active) return;
+  const cur = cart[id] || 0;
+  const next = Math.max(0, cur + delta);
+  if (next === 0) delete cart[id];
+  else cart[id] = next;
+  saveCart();
+  renderProducts();
+  renderCartIndicator();
+  renderCartItems();
+  renderOrderButtons();
+  renderCartPromo();
+}
+
+function renderCartIndicator() {
+  const items = Object.entries(cart);
+  const count = items.reduce((s, [, q]) => s + q, 0);
+  const total = items.reduce((s, [id, q]) => {
+    const p = state.products.find(x => x.id === id);
+    return s + (p ? p.price * q : 0);
+  }, 0);
+
+  const btn = $('cartButton');
+  if (count > 0) {
+    btn.classList.remove('hidden');
+    $('cartCount').textContent = count;
+    $('cartTotalSmall').textContent = formatPrice(total);
+  } else {
+    btn.classList.add('hidden');
+  }
+  $('cartTotal').textContent = formatPrice(total);
+}
+
+function renderCartPromo() {
+  const el = $('cartPromo');
+  const promo = state.profile.promo || {};
+  if ((promo.text && promo.text.trim()) || (promo.code && promo.code.trim())) {
+    let html = '';
+    if (promo.text && promo.text.trim()) html += escapeHtml(promo.text);
+    if (promo.code && promo.code.trim()) html += ` · Code : <strong>${escapeHtml(promo.code)}</strong>`;
+    el.innerHTML = '🎁 ' + html;
+    el.classList.remove('hidden');
+  } else {
+    el.classList.add('hidden');
+  }
+}
+
+function renderCartItems() {
+  const container = $('cartItems');
+  // Nettoyage des références orphelines (uniquement si produits chargés)
+  if (state.products.length > 0) {
+    let changed = false;
+    for (const id of Object.keys(cart)) {
+      if (!state.products.find(p => p.id === id)) { delete cart[id]; changed = true; }
+    }
+    if (changed) saveCart();
+  }
+
+  const items = Object.entries(cart);
+  if (items.length === 0) {
+    container.innerHTML = `<div class="text-center text-gray-500 text-sm py-12">Votre panier est vide.</div>`;
+    return;
+  }
+  container.innerHTML = items.map(([id, qty]) => {
+    const p = state.products.find(x => x.id === id);
+    if (!p) return '';
+    const img = p.image || placeholderImg(p.name);
+    return `
+      <div class="flex gap-3 items-center bg-gray-50 rounded-xl p-2">
+        <img src="${img}" class="w-16 h-16 rounded-lg object-cover" alt="">
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-medium truncate">${escapeHtml(p.name)}</div>
+          <div class="text-xs text-gray-500">${formatPrice(p.price)}</div>
+          <div class="flex items-center gap-1 mt-1 bg-white rounded-lg w-max border border-gray-200">
+            <button data-cminus="${p.id}" class="w-7 h-7 text-gray-700">−</button>
+            <span class="w-6 text-center text-xs font-medium">${qty}</span>
+            <button data-cplus="${p.id}" class="w-7 h-7 text-gray-700">+</button>
+          </div>
+        </div>
+        <button data-cdel="${p.id}" class="p-2 text-gray-400 hover:text-red-500" aria-label="Retirer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    `;
+  }).join('');
+
+  container.querySelectorAll('[data-cplus]').forEach(b =>
+    b.addEventListener('click', () => addToCart(b.dataset.cplus, 1)));
+  container.querySelectorAll('[data-cminus]').forEach(b =>
+    b.addEventListener('click', () => addToCart(b.dataset.cminus, -1)));
+  container.querySelectorAll('[data-cdel]').forEach(b =>
+    b.addEventListener('click', () => {
+      delete cart[b.dataset.cdel];
+      saveCart();
+      renderProducts(); renderCartIndicator(); renderCartItems(); renderOrderButtons();
+    }));
+}
+
+/* =============================================================
+   COMMANDE
+============================================================= */
+function buildOrderText() {
+  const orderNum = 'CMD-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+  let text = `🛒 *Nouvelle commande* (${orderNum})\n\n`;
+  let total = 0;
+  for (const [id, qty] of Object.entries(cart)) {
+    const p = state.products.find(x => x.id === id);
+    if (!p) continue;
+    const lineTotal = p.price * qty;
+    total += lineTotal;
+    text += `• ${p.name} ×${qty} — ${formatPrice(lineTotal)}\n`;
+  }
+  text += `\n*Total : ${formatPrice(total)}*\n`;
+  const promo = state.profile.promo || {};
+  if (promo.code && promo.code.trim()) text += `\nCode promo : *${promo.code.trim()}*\n`;
+  if (promo.text && promo.text.trim()) text += `${promo.text.trim()}\n`;
+  text += `\nMerci pour votre commande 🙏`;
+  return text;
+}
+
+async function placeOrder(channel) {
+  const c = state.contacts[channel];
+  if (!c || !c.enabled || !c.value.trim()) return;
+  const text = buildOrderText();
+  const copied = await copyText(text);
+  toast(copied ? '✅ Récapitulatif copié ! Collez-le dans la discussion' : 'Récapitulatif prêt, collez-le manuellement');
+
+  setTimeout(() => {
+    const val = c.value.trim().replace(/^@/, '');
+    let url = '';
+    if (channel === 'whatsapp') url = `https://wa.me/${val.replace(/[^\d]/g, '')}?text=${encodeURIComponent(text)}`;
+    else if (channel === 'telegram') url = `https://t.me/${val}?text=${encodeURIComponent(text)}`;
+    else if (channel === 'signal') url = val.startsWith('http') ? val : `https://signal.me/#p/${val}`;
+    else if (channel === 'snapchat') url = `https://www.snapchat.com/add/${val}`;
+    if (url) window.open(url, '_blank');
+  }, 400);
+}
+
+function renderOrderButtons() {
+  const container = $('orderButtons');
+  const channels = [
+    { key: 'whatsapp', label: 'WhatsApp', cls: 'bg-[#25D366] hover:bg-[#1ebe5a]', icon: '💬' },
+    { key: 'telegram', label: 'Telegram', cls: 'bg-[#229ED9] hover:bg-[#1d8cbf]', icon: '✈️' },
+    { key: 'signal',   label: 'Signal',   cls: 'bg-[#3A76F0] hover:bg-[#2f66d4]', icon: '🔒' },
+    { key: 'snapchat', label: 'Snapchat', cls: 'bg-[#FFFC00] text-gray-900 hover:bg-[#e6e300]', icon: '👻' }
+  ];
+  const active = channels.filter(c => state.contacts[c.key]?.enabled && (state.contacts[c.key]?.value || '').trim());
+
+  if (Object.keys(cart).length === 0) {
+    container.innerHTML = `<p class="text-center text-xs text-gray-500">Ajoutez des produits pour commander.</p>`;
+    return;
+  }
+  if (active.length === 0) {
+    container.innerHTML = `<p class="text-center text-xs text-gray-500">Aucun canal de commande disponible.</p>`;
+    return;
+  }
+
+  container.innerHTML = active.map(c => `
+    <button data-order="${c.key}" class="${c.cls} text-white font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-2 w-full text-sm active:scale-[0.99] transition">
+      <span>${c.icon}</span> Commander via ${c.label}
+    </button>
+  `).join('');
+
+  container.querySelectorAll('[data-order]').forEach(b =>
+    b.addEventListener('click', () => placeOrder(b.dataset.order)));
+}
+
+/* =============================================================
+   FAVORIS
+============================================================= */
+function toggleFavorite(id) {
+  if (favorites.includes(id)) favorites = favorites.filter(x => x !== id);
+  else favorites.push(id);
+  saveFavorites();
+  renderProducts();
+  if (pmProductId === id) updatePmFav();
+}
+
+/* =============================================================
+   MODAL PRODUIT
+============================================================= */
+let pmProductId = null;
+let pmQty = 1;
+
+function openProductModal(id) {
+  const p = state.products.find(x => x.id === id);
+  if (!p || !p.active) return;
+  recordViewed(p.id);
+  $('pmImage').src = p.image || placeholderImg(p.name);
+  $('pmCategory').textContent = p.category || '';
+  $('pmName').textContent = p.name;
+  $('pmDesc').textContent = p.description || '';
+  $('pmPrice').textContent = formatPrice(p.price);
+  pmQty = 1;
+  $('pmQty').textContent = '1';
+  pmProductId = p.id;
+  updatePmFav();
+  const m = $('productModal');
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+}
+
+function closeProductModal() {
+  const m = $('productModal');
+  m.classList.add('hidden');
+  m.classList.remove('flex');
+  pmProductId = null;
+}
+
+function updatePmFav() {
+  if (!pmProductId) return;
+  const fav = favorites.includes(pmProductId);
+  const btn = $('pmFav');
+  btn.textContent = fav ? '♥' : '♡';
+  btn.className = 'absolute top-3 right-3 w-10 h-10 rounded-full bg-white/90 backdrop-blur flex items-center justify-center text-lg shadow ' + (fav ? 'text-red-500' : 'text-gray-400');
+}
+
+/* =============================================================
+   PARTAGE
+============================================================= */
+async function shareShop() {
+  const url = location.origin + location.pathname + location.search + (location.hash || '');
+  const data = { title: state.profile.name || 'Ma Boutique', text: state.profile.bio || 'Découvrez ma boutique', url };
+  if (navigator.share) {
+    try { await navigator.share(data); return; }
+    catch (e) { if (e.name === 'AbortError') return; }
+  }
+  const ok = await copyText(url);
+  toast(ok ? 'Lien de la boutique copié ✅' : 'Copie impossible');
+}
+
+/* =============================================================
+   ADMIN — LOGIN
+============================================================= */
+function triggerLogoClick() {
+  const now = Date.now();
+  logoClickTimes = logoClickTimes.filter(t => now - t < 2000);
+  logoClickTimes.push(now);
+  if (logoClickTimes.length >= 5) {
+    logoClickTimes = [];
+    openAdminLogin();
+  }
+}
+
+function openAdminLogin() {
+  loginStep = 'password';
+  renderLoginStep();
+  $('loginError').textContent = '';
+  $('adminLoginModal').classList.remove('hidden');
+  $('adminLoginModal').classList.add('flex');
+  setTimeout(() => $('adminPassword').focus(), 100);
+}
+
+function closeAdminLogin() {
+  $('adminLoginModal').classList.add('hidden');
+  $('adminLoginModal').classList.remove('flex');
+  loginStep = 'password';
+  $('adminPassword').value = '';
+  $('loginError').textContent = '';
+}
+
+function renderLoginStep() {
+  const inp = $('adminPassword');
+  const label = $('loginStepLabel');
+  if (loginStep === 'pin') {
+    inp.type = 'password';
+    inp.placeholder = 'Code PIN';
+    inp.setAttribute('inputmode', 'numeric');
+    label.textContent = 'Étape 2/2 : code PIN';
+    label.classList.remove('hidden');
+  } else {
+    inp.type = 'password';
+    inp.placeholder = 'Mot de passe';
+    inp.removeAttribute('inputmode');
+    label.classList.add('hidden');
+  }
+  inp.value = '';
+  if (loginStep === 'pin') setTimeout(() => inp.focus(), 50);
+}
+
+function registerFailedAttempt() {
+  lock.attempts = (lock.attempts || 0) + 1;
+  if (lock.attempts >= 5) {
+    lock.until = Date.now() + 60000;
+    $('loginError').textContent = 'Trop de tentatives. Compte verrouillé 60s.';
+  } else {
+    $('loginError').textContent = `Mot de passe incorrect. (${lock.attempts}/5)`;
+  }
+  saveLock();
+}
+
+async function tryAdminLogin() {
+  if (lock.until > Date.now()) {
+    const remaining = Math.ceil((lock.until - Date.now()) / 1000);
+    $('loginError').textContent = `Verrouillé. Réessayez dans ${remaining}s.`;
+    return;
+  }
+  const pw = $('adminPassword').value;
+  if (!pw) { $('loginError').textContent = loginStep === 'pin' ? 'PIN requis.' : 'Mot de passe requis.'; return; }
+  const hash = await sha256(pw);
+
+  if (loginStep === 'password') {
+    let ok = false;
+    if (!state.security.passwordHash) {
+      if (pw === 'admin1234') { state.security.passwordHash = hash; saveData(); ok = true; }
+    } else {
+      ok = hash === state.security.passwordHash;
+    }
+    if (!ok) { registerFailedAttempt(); return; }
+    lock.attempts = 0; lock.until = 0; saveLock();
+    if (state.security.pinEnabled && state.security.pinHash) {
+      loginStep = 'pin'; renderLoginStep(); $('loginError').textContent = ''; return;
+    }
+    closeAdminLogin(); openAdmin();
+  } else if (loginStep === 'pin') {
+    if (hash !== state.security.pinHash) { registerFailedAttempt(); return; }
+    lock.attempts = 0; lock.until = 0; saveLock();
+    closeAdminLogin(); openAdmin();
+  }
+}
+
+/* =============================================================
+   ADMIN — PANNEAU
+============================================================= */
+function openAdmin() {
+  $('adminPanel').classList.remove('hidden');
+  currentTab = 'products';
+  editingProductId = null;
+  renderAdminTabs();
+  renderAdminContent();
+  window.scrollTo(0, 0);
+}
+
+function closeAdmin() {
+  $('adminPanel').classList.add('hidden');
+  editingProductId = null;
+  if (location.hash.includes('admin')) {
+    const clean = location.hash.replace(/[#&]?admin/, '');
+    const newHash = clean && clean !== '#' ? clean : '';
+    history.replaceState(null, '', location.pathname + location.search + (newHash ? '#' + newHash : ''));
+  }
+}
+
+function renderAdminTabs() {
+  document.querySelectorAll('.admin-tab').forEach(b => {
+    const active = b.dataset.tab === currentTab;
+    b.className = 'admin-tab px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition ' +
+      (active ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 border border-gray-200');
+    b.onclick = () => {
+      currentTab = b.dataset.tab;
+      editingProductId = null;
+      renderAdminTabs();
+      renderAdminContent();
+    };
+  });
+}
+
+function renderAdminContent() {
+  const c = $('adminContent');
+  if (currentTab === 'products') c.innerHTML = renderProductsTab();
+  else if (currentTab === 'profile') c.innerHTML = renderProfileTab();
+  else if (currentTab === 'contacts') c.innerHTML = renderContactsTab();
+  else if (currentTab === 'security') c.innerHTML = renderSecurityTab();
+  bindAdminEvents();
+}
+
+function renderProductsTab() {
+  if (editingProductId) return renderProductForm();
+  const rows = state.products.map(p => `
+    <div class="bg-white rounded-xl p-3 flex items-center gap-3 border border-gray-100">
+      <img src="${p.image || placeholderImg(p.name)}" class="w-14 h-14 rounded-lg object-cover flex-shrink-0" alt="">
+      <div class="flex-1 min-w-0">
+        <div class="text-sm font-medium truncate">${escapeHtml(p.name)}</div>
+        <div class="text-xs text-gray-500">${escapeHtml(p.category || '—')} • ${formatPrice(p.price)}</div>
+        ${p.active ? '' : '<span class="text-[10px] text-red-600 font-medium">RUPTURE</span>'}
+      </div>
+      <div class="flex items-center gap-1">
+        <button data-edit="${p.id}" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg" title="Modifier">✏️</button>
+        <button data-dup="${p.id}" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg" title="Dupliquer">📄</button>
+        <button data-toggle="${p.id}" class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg" title="Activer/désactiver">${p.active ? '👁️' : '🚫'}</button>
+        <button data-del="${p.id}" class="p-2 text-red-600 hover:bg-red-50 rounded-lg" title="Supprimer">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+  return `
+    <div class="space-y-3">
+      <button id="addProductBtn" class="w-full py-3 rounded-xl bg-gray-900 text-white text-sm font-medium">+ Ajouter un produit</button>
+      <div class="space-y-2">${rows || '<p class="text-center text-sm text-gray-500 py-6">Aucun produit.</p>'}</div>
+    </div>
+  `;
+}
+
+function renderProductForm() {
+  const isNew = editingProductId === 'new';
+  const p = isNew
+    ? { name: '', category: '', price: '', description: '', image: '', active: true }
+    : state.products.find(x => x.id === editingProductId)
+      || { name: '', category: '', price: '', description: '', image: '', active: true };
+  return `
+    <div class="bg-white rounded-2xl p-4 border border-gray-100 space-y-3">
+      <h2 class="font-semibold text-sm">${isNew ? 'Nouveau produit' : 'Modifier le produit'}</h2>
+      <div class="flex items-center gap-3">
+        <img id="pvImg" src="${p.image || placeholderImg(p.name || '?')}" class="w-20 h-20 rounded-xl object-cover bg-gray-100" alt="">
+        <label class="flex-1 text-center py-3 rounded-xl bg-gray-100 text-sm font-medium cursor-pointer">
+          Choisir une image
+          <input id="pvFile" type="file" accept="image/*" class="hidden">
+        </label>
+      </div>
+      <input id="fName" type="text" placeholder="Nom du produit" value="${escapeHtml(p.name)}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">
+      <div class="grid grid-cols-2 gap-2">
+        <input id="fCat" type="text" placeholder="Catégorie" value="${escapeHtml(p.category || '')}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">
+        <input id="fPrice" type="number" step="any" placeholder="Prix" value="${p.price}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">
+      </div>
+      <textarea id="fDesc" placeholder="Description" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">${escapeHtml(p.description || '')}</textarea>
+      <label class="flex items-center gap-2 text-sm">
+        <input id="fActive" type="checkbox" ${p.active ? 'checked' : ''} class="w-4 h-4">
+        <span>Produit disponible à la vente</span>
+      </label>
+      <div class="flex gap-2 pt-1">
+        <button id="cancelProductBtn" class="flex-1 py-3 rounded-xl bg-gray-100 text-sm font-medium">Annuler</button>
+        <button id="saveProductBtn" class="flex-1 py-3 rounded-xl bg-gray-900 text-white text-sm font-medium">Enregistrer</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderProfileTab() {
+  const p = state.profile;
+  const trust = p.trust || [];
+  const promo = p.promo || {};
+  return `
+    <div class="bg-white rounded-2xl p-4 border border-gray-100 space-y-3">
+      <h2 class="font-semibold text-sm">Profil de la boutique</h2>
+      <div class="flex items-center gap-3">
+        <img id="pvLogo" src="${p.logo || placeholderImg(p.name || 'M')}" class="w-20 h-20 rounded-full object-cover bg-gray-100" alt="">
+        <label class="flex-1 text-center py-3 rounded-xl bg-gray-100 text-sm font-medium cursor-pointer">
+          Changer le logo
+          <input id="logoFile" type="file" accept="image/*" class="hidden">
+        </label>
+      </div>
+      <label class="block text-xs text-gray-500">Nom de la boutique</label>
+      <input id="pName" type="text" value="${escapeHtml(p.name)}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">
+      <label class="block text-xs text-gray-500">Bio / Description</label>
+      <textarea id="pBio" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">${escapeHtml(p.bio || '')}</textarea>
+      <label class="block text-xs text-gray-500">Bandeau d'annonce</label>
+      <input id="pAnn" type="text" value="${escapeHtml(p.announcement || '')}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">
+      <label class="block text-xs text-gray-500">Devise</label>
+      <select id="pCurrency" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm bg-white">
+        ${['FCFA','€','$','£','CHF','MAD'].map(c => `<option value="${c}" ${c === p.currency ? 'selected' : ''}>${c}</option>`).join('')}
+      </select>
+      <div class="pt-3 border-t">
+        <h3 class="text-xs font-medium text-gray-700 mb-2">Arguments de réassurance (3 max)</h3>
+        <div class="space-y-2">
+          ${[0,1,2].map(i => {
+            const t = trust[i] || { icon: '', text: '' };
+            return `<div class="flex gap-2">
+              <input data-trust-icon="${i}" type="text" maxlength="2" placeholder="⚡" value="${escapeHtml(t.icon||'')}" class="w-14 px-2 py-2 rounded-lg border border-gray-200 text-sm text-center">
+              <input data-trust-text="${i}" type="text" placeholder="Texte (ex: Livraison rapide)" value="${escapeHtml(t.text||'')}" class="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm">
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="pt-3 border-t">
+        <h3 class="text-xs font-medium text-gray-700 mb-2">Offre / Rétention</h3>
+        <input id="pPromoText" type="text" placeholder="Message promo" value="${escapeHtml(promo.text||'')}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm mb-2">
+        <input id="pPromoCode" type="text" placeholder="Code promo" value="${escapeHtml(promo.code||'')}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm">
+      </div>
+      <button id="saveProfileBtn" class="w-full py-3 rounded-xl bg-gray-900 text-white text-sm font-medium">Enregistrer</button>
+    </div>
+  `;
+}
+
+function renderContactsTab() {
+  const c = state.contacts;
+  const row = (key, label, placeholder) => `
+    <div class="bg-white rounded-xl p-3 border border-gray-100">
+      <label class="flex items-center justify-between mb-2">
+        <span class="text-sm font-medium">${label}</span>
+        <input type="checkbox" data-tg="${key}" ${c[key].enabled ? 'checked' : ''} class="w-5 h-5 accent-gray-900">
+      </label>
+      <input type="text" data-val="${key}" placeholder="${placeholder}" value="${escapeHtml(c[key].value || '')}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm">
+    </div>
+  `;
+  return `
+    <div class="space-y-3">
+      <p class="text-xs text-gray-500">Activez uniquement les canaux que vous utilisez.</p>
+      ${row('whatsapp', 'WhatsApp', 'Numéro international sans + (ex: 2250123456789)')}
+      ${row('telegram', 'Telegram', 'Nom d\'utilisateur sans @')}
+      ${row('signal', 'Signal', 'Numéro ou lien signal.me')}
+      ${row('snapchat', 'Snapchat', 'Nom d\'utilisateur sans @')}
+      <button id="saveContactsBtn" class="w-full py-3 rounded-xl bg-gray-900 text-white text-sm font-medium">Enregistrer</button>
+    </div>
+  `;
+}
+
+function renderSecurityTab() {
+  const fbConnected = !!fbDb;
+  const fbUrl = localStorage.getItem(FB_URL_KEY) || HARDCODED_FB_URL;
+  const shareLink = (fbUrl === HARDCODED_FB_URL)
+    ? (location.origin + location.pathname)
+    : (location.origin + location.pathname + '#fb=' + encodeURIComponent(fbUrl));
+  const pinEnabled = !!state.security.pinEnabled;
+  const locked = lock.until > Date.now();
+  return `
+    <div class="space-y-4">
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 space-y-3">
+        <h2 class="font-semibold text-sm">Changer le mot de passe</h2>
+        <input id="newPw" type="password" placeholder="Nouveau mot de passe" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">
+        <input id="newPw2" type="password" placeholder="Confirmer le mot de passe" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">
+        <button id="changePwBtn" class="w-full py-3 rounded-xl bg-gray-900 text-white text-sm font-medium">Mettre à jour</button>
+        <p id="pwMsg" class="text-xs h-4"></p>
+      </div>
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 space-y-3">
+        <h2 class="font-semibold text-sm">Double sécurité (PIN)</h2>
+        <label class="flex items-center gap-2 text-sm">
+          <input id="pinEnabled" type="checkbox" ${pinEnabled ? 'checked' : ''} class="w-4 h-4">
+          <span>Exiger un code PIN en plus du mot de passe</span>
+        </label>
+        <input id="pinInput" type="text" inputmode="numeric" maxlength="6" placeholder="PIN (4 à 6 chiffres)" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">
+        <button id="savePinBtn" class="w-full py-3 rounded-xl bg-gray-900 text-white text-sm font-medium">Enregistrer le PIN</button>
+      </div>
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 space-y-3">
+        <h2 class="font-semibold text-sm">État de sécurité</h2>
+        <p class="text-xs">Tentatives échouées : <strong>${lock.attempts || 0}</strong></p>
+        ${locked ? `<p class="text-xs text-red-600">Verrouillé jusqu'à ${new Date(lock.until).toLocaleTimeString()}</p>` : '<p class="text-xs text-green-600">Accès disponible</p>'}
+        <button id="resetLockBtn" class="w-full py-2 rounded-lg bg-gray-100 text-xs font-medium">Réinitialiser</button>
+      </div>
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 space-y-3">
+        <h2 class="font-semibold text-sm">Synchronisation Firebase</h2>
+        <p class="text-xs">Statut : ${fbConnected ? '<span class="text-green-600 font-medium">● Connecté</span>' : '<span class="text-gray-400">● Non connecté</span>'}</p>
+        <input id="fbUrlInput" type="text" value="${escapeHtml(fbUrl)}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">
+        <div class="flex gap-2">
+          <button id="fbConnectBtn" class="flex-1 py-3 rounded-xl bg-gray-900 text-white text-sm font-medium">Connecter</button>
+          <button id="fbDisconnectBtn" class="flex-1 py-3 rounded-xl bg-gray-100 text-sm font-medium">Déconnecter</button>
+        </div>
+        <div class="pt-2 border-t">
+          <label class="block text-xs text-gray-500 mb-1">Lien de partage (à donner à vos visiteurs)</label>
+          <input type="text" readonly value="${escapeHtml(shareLink)}" id="shareLinkInput" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-xs bg-gray-50">
+          <button id="copyShareBtn" class="mt-2 w-full py-2 rounded-lg bg-gray-100 text-xs font-medium">Copier le lien</button>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl p-4 border border-gray-100 space-y-3">
+        <h2 class="font-semibold text-sm">Sauvegarde</h2>
+        <div class="flex gap-2">
+          <button id="exportBtn" class="flex-1 py-3 rounded-xl bg-gray-100 text-sm font-medium">Exporter JSON</button>
+          <label class="flex-1 py-3 rounded-xl bg-gray-100 text-sm font-medium text-center cursor-pointer">
+            Importer JSON
+            <input id="importFile" type="file" accept="application/json" class="hidden">
+          </label>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* =============================================================
+   ADMIN — ÉVÉNEMENTS
+============================================================= */
+function bindAdminEvents() {
+  const addBtn = $('addProductBtn');
+  if (addBtn) addBtn.addEventListener('click', () => { editingProductId = 'new'; pendingProductImage = null; renderAdminContent(); });
+
+  document.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => {
+    editingProductId = b.dataset.edit; pendingProductImage = null; renderAdminContent();
+  }));
+  document.querySelectorAll('[data-dup]').forEach(b => b.addEventListener('click', () => {
+    const src = state.products.find(x => x.id === b.dataset.dup);
+    if (!src) return;
+    state.products.push({ ...src, id: uid(), name: src.name + ' (copie)', createdAt: Date.now() });
+    saveData(); render(true); renderAdminContent();
+  }));
+  document.querySelectorAll('[data-toggle]').forEach(b => b.addEventListener('click', () => {
+    const p = state.products.find(x => x.id === b.dataset.toggle);
+    if (!p) return;
+    p.active = !p.active;
+    saveData(); render(true); renderAdminContent();
+  }));
+  document.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => {
+    if (!confirm('Supprimer ce produit ?')) return;
+    const id = b.dataset.del;
+    state.products = state.products.filter(x => x.id !== id);
+    delete cart[id];
+    favorites = favorites.filter(x => x !== id);
+    recentlyViewed = recentlyViewed.filter(x => x !== id);
+    saveCart(); saveFavorites(); saveRecentlyViewed();
+    saveData(); render(true); renderAdminContent();
+  }));
+
+  const pvFile = $('pvFile');
+  if (pvFile) pvFile.addEventListener('change', async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try { pendingProductImage = await compressImage(f); $('pvImg').src = pendingProductImage; }
+    catch (err) { alert('Impossible de traiter cette image.'); }
+  });
+
+  const cancelBtn = $('cancelProductBtn');
+  if (cancelBtn) cancelBtn.addEventListener('click', () => { editingProductId = null; pendingProductImage = null; renderAdminContent(); });
+
+  const saveBtn = $('saveProductBtn');
+  if (saveBtn) saveBtn.addEventListener('click', () => {
+    const name = $('fName').value.trim();
+    const category = $('fCat').value.trim();
+    const price = Number($('fPrice').value);
+    const description = $('fDesc').value.trim();
+    const active = $('fActive').checked;
+    if (!name) { alert('Le nom est requis.'); return; }
+    if (isNaN(price) || price < 0) { alert('Prix invalide.'); return; }
+    if (editingProductId === 'new') {
+      state.products.push({ id: uid(), name, category, price, description, image: pendingProductImage || '', active, createdAt: Date.now() });
+    } else {
+      const p = state.products.find(x => x.id === editingProductId);
+      if (p) { p.name = name; p.category = category; p.price = price; p.description = description; p.active = active; if (pendingProductImage) p.image = pendingProductImage; }
+    }
+    editingProductId = null; pendingProductImage = null;
+    saveData(); render(true); renderAdminContent();
+  });
+
+  const logoFile = $('logoFile');
+  if (logoFile) logoFile.addEventListener('change', async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try { pendingLogoImage = await compressImage(f); $('pvLogo').src = pendingLogoImage; }
+    catch (err) { alert('Impossible de traiter cette image.'); }
+  });
+
+  const saveProfile = $('saveProfileBtn');
+  if (saveProfile) saveProfile.addEventListener('click', () => {
+    state.profile.name = $('pName').value.trim() || 'Ma Boutique';
+    state.profile.bio = $('pBio').value.trim();
+    state.profile.announcement = $('pAnn').value.trim();
+    state.profile.currency = $('pCurrency').value;
+    state.profile.trust = [0,1,2].map(i => ({
+      icon: (document.querySelector(`[data-trust-icon="${i}"]`)?.value || '').trim(),
+      text: (document.querySelector(`[data-trust-text="${i}"]`)?.value || '').trim()
+    })).filter(t => t.text);
+    state.profile.promo = {
+      text: ($('pPromoText')?.value || '').trim(),
+      code: ($('pPromoCode')?.value || '').trim()
+    };
+    if (pendingLogoImage) { state.profile.logo = pendingLogoImage; pendingLogoImage = null; }
+    saveData(); render(true); renderAdminContent();
+    toast('Profil enregistré ✅');
+  });
+
+  const saveContacts = $('saveContactsBtn');
+  if (saveContacts) saveContacts.addEventListener('click', () => {
+    ['whatsapp', 'telegram', 'signal', 'snapchat'].forEach(k => {
+      const v = document.querySelector(`[data-val="${k}"]`);
+      const t = document.querySelector(`[data-tg="${k}"]`);
+      if (v) state.contacts[k].value = v.value.trim();
+      if (t) state.contacts[k].enabled = t.checked;
+    });
+    saveData(); render(true); renderAdminContent();
+    toast('Contacts enregistrés ✅');
+  });
+
+  const changePw = $('changePwBtn');
+  if (changePw) changePw.addEventListener('click', async () => {
+    const a = $('newPw').value, b = $('newPw2').value;
+    const msg = $('pwMsg');
+    msg.className = 'text-xs h-4';
+    if (!a || a.length < 4) { msg.textContent = 'Minimum 4 caractères.'; msg.classList.add('text-red-500'); return; }
+    if (a !== b) { msg.textContent = 'Les mots de passe ne correspondent pas.'; msg.classList.add('text-red-500'); return; }
+    state.security.passwordHash = await sha256(a);
+    saveData();
+    msg.textContent = 'Mot de passe mis à jour ✅'; msg.classList.add('text-green-600');
+  });
+
+  const savePinBtn = $('savePinBtn');
+  if (savePinBtn) savePinBtn.addEventListener('click', async () => {
+    const enabled = $('pinEnabled').checked;
+    const pin = $('pinInput').value.trim();
+    if (enabled) {
+      if (!/^\d{4,6}$/.test(pin)) { alert('Le PIN doit contenir 4 à 6 chiffres.'); return; }
+      state.security.pinEnabled = true; state.security.pinHash = await sha256(pin);
+    } else { state.security.pinEnabled = false; state.security.pinHash = ''; }
+    saveData(); toast('Paramètres PIN enregistrés ✅'); renderAdminContent();
+  });
+
+  const resetLock = $('resetLockBtn');
+  if (resetLock) resetLock.addEventListener('click', () => { lock.attempts = 0; lock.until = 0; saveLock(); toast('Verrouillage réinitialisé ✅'); renderAdminContent(); });
+
+  const fbConnect = $('fbConnectBtn');
+  if (fbConnect) fbConnect.addEventListener('click', async () => {
+    const url = $('fbUrlInput').value.trim();
+    if (!url) { alert('Collez une URL Firebase.'); return; }
+    localStorage.setItem(FB_URL_KEY, url);
+    const ok = await connectFirebase(url);
+    if (ok) { toast('Firebase connecté ✅'); render(true); renderAdminContent(); }
+    else alert('Échec de connexion.');
+  });
+
+  const fbDisconnect = $('fbDisconnectBtn');
+  if (fbDisconnect) fbDisconnect.addEventListener('click', async () => {
+    localStorage.removeItem(FB_URL_KEY);
+    try { if (fbDb) fbDb.ref('store').off(); if (firebase.apps.length) await Promise.all(firebase.apps.map(a => a.delete().catch(() => {}))); } catch (_) {}
+    fbDb = null; toast('Déconnecté.'); renderAdminContent();
+  });
+
+  const copyShare = $('copyShareBtn');
+  if (copyShare) copyShare.addEventListener('click', async () => {
+    const v = $('shareLinkInput').value;
+    const ok = await copyText(v);
+    toast(ok ? 'Lien copié ✅' : 'Copie impossible');
+  });
+
+  const exportBtn = $('exportBtn');
+  if (exportBtn) exportBtn.addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `sauvegarde-boutique-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+  });
+
+  const importFile = $('importFile');
+  if (importFile) importFile.addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (!confirm('Remplacer toutes les données actuelles ?')) return;
+        state = mergeDeep(DEFAULT_DATA, data);
+        saveData(); render(true); renderAdminContent();
+        toast('Données importées ✅');
+      } catch (_) { alert('Fichier JSON invalide.'); }
+    };
+    reader.readAsText(f);
+  });
+}
+
+/* =============================================================
+   RENDU GLOBAL (avec anti-re-render)
+============================================================= */
+function render(force = false) {
+  // Anti re-render : si l'état n'a pas changé, on saute
+  try {
+    const hash = JSON.stringify(state);
+    if (!force && hash === lastRenderHash) return;
+    lastRenderHash = hash;
+  } catch (_) {}
+
+  renderHeader();
+  renderTrust();
+  renderCategories();
+  renderProducts();
+  renderRecentlyViewed();
+  renderCartIndicator();
+  renderCartItems();
+  renderCartPromo();
+  renderOrderButtons();
+  if (!$('adminPanel').classList.contains('hidden')) renderAdminContent();
+}
+
+/* =============================================================
+   PANIER — Ouvrir / Fermer
+============================================================= */
+function openCart() {
+  renderCartItems(); renderCartPromo(); renderOrderButtons(); renderCartIndicator();
+  const d = $('cartDrawer');
+  d.classList.remove('translate-x-full');
+  d.classList.add('translate-x-0');
+  $('cartOverlay').classList.remove('hidden');
+}
+function closeCart() {
+  const d = $('cartDrawer');
+  d.classList.add('translate-x-full');
+  d.classList.remove('translate-x-0');
+  $('cartOverlay').classList.add('hidden');
+}
+
+/* =============================================================
+   INIT — CACHE-FIRST (rendu instantané)
+============================================================= */
+function bindAllEvents() {
+  $('searchInput').addEventListener('input', e => { searchQuery = e.target.value; renderProducts(); });
+  $('sortSelect').addEventListener('change', e => { sortMode = e.target.value; renderProducts(); });
+  $('favFilterBtn').addEventListener('click', () => {
+    showFavoritesOnly = !showFavoritesOnly;
+    const btn = $('favFilterBtn');
+    if (showFavoritesOnly) {
+      btn.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+      btn.classList.add('bg-red-500', 'text-white', 'border-red-500');
+    } else {
+      btn.classList.remove('bg-red-500', 'text-white', 'border-red-500');
+      btn.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
+    }
+    renderProducts();
+  });
+  $('shareBtn').addEventListener('click', shareShop);
+  $('cartButton').addEventListener('click', openCart);
+  $('cartOverlay').addEventListener('click', closeCart);
+  $('closeCartBtn').addEventListener('click', closeCart);
+
+  $('pmClose').addEventListener('click', closeProductModal);
+  $('pmFav').addEventListener('click', () => { if (pmProductId) toggleFavorite(pmProductId); });
+  $('pmMinus').addEventListener('click', () => { pmQty = Math.max(1, pmQty - 1); $('pmQty').textContent = pmQty; });
+  $('pmPlus').addEventListener('click', () => { pmQty = Math.min(99, pmQty + 1); $('pmQty').textContent = pmQty; });
+  $('pmAdd').addEventListener('click', () => {
+    if (!pmProductId) return;
+    addToCart(pmProductId, pmQty);
+    closeProductModal();
+    toast('Ajouté au panier ✅');
+  });
+  $('productModal').addEventListener('click', e => { if (e.target.id === 'productModal') closeProductModal(); });
+
+  $('shopLogo').addEventListener('click', triggerLogoClick);
+  if (location.hash.includes('admin')) setTimeout(openAdminLogin, 200);
+
+  $('adminLoginBtn').addEventListener('click', tryAdminLogin);
+  $('adminPassword').addEventListener('keydown', e => { if (e.key === 'Enter') tryAdminLogin(); });
+  $('adminLoginCancelBtn').addEventListener('click', closeAdminLogin);
+  $('adminLoginModal').addEventListener('click', e => { if (e.target.id === 'adminLoginModal') closeAdminLogin(); });
+  $('adminQuitBtn').addEventListener('click', closeAdmin);
+
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (!$('productModal').classList.contains('hidden')) closeProductModal();
+    else if ($('cartOverlay').classList.contains('hidden') === false) closeCart();
+    else if (!$('adminLoginModal').classList.contains('hidden')) closeAdminLogin();
+  });
+}
+
+async function init() {
+  // 1️⃣ RENDU INSTANTANÉ depuis le cache (Firebase ou local)
+  const cached = loadFirebaseCache();
+  const fbConfigured = !!getFirebaseUrl();
+
+  if (cached) {
+    // Visite récurrente : données Firebase en cache → affichage instantané
+    state = mergeDeep(DEFAULT_DATA, cached);
+  } else if (fbConfigured) {
+    // Première visite avec Firebase configuré : on ne montre PAS les données démo
+    state = {
+      ...DEFAULT_DATA,
+      profile: { ...DEFAULT_DATA.profile, name: '…', bio: '', announcement: '', logo: '', trust: [], promo: { text: '', code: '' } },
+      products: []
+    };
+  } else {
+    // Pas de Firebase : on charge le local/démo
+    state = loadLocalData();
+  }
+
+  bindAllEvents();
+  render();
+
+  // Si première visite avec Firebase : afficher un état "chargement" dans la grille
+  if (!cached && fbConfigured) {
+    $('productGrid').innerHTML = '<div class="text-center text-gray-400 text-sm py-12" style="grid-column:1/-1">Chargement de la boutique…</div>';
+    $('emptyState').classList.add('hidden');
+  }
+
+  // 2️⃣ CHARGEMENT FIREBASE EN ARRIÈRE-PLAN (après premier paint)
+  if (fbConfigured) {
+    const raf = window.requestAnimationFrame || (cb => setTimeout(cb, 16));
+    // Double rAF = garantit que le premier paint a eu lieu avant de bloquer
+    raf(() => raf(loadFirebaseAsync));
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
